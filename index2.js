@@ -4,9 +4,9 @@
 3.Fetch the next ISS flyovers for our geo coordinates.
 Returns 5 upcoming times that the ISS will fly over, and the duration it will remain "visible" in the sky */
 
-const { nextISSTimesForMyLocation } = require('./iss');
+const { nextISSTimesForMyLocation } = require('./iss_promised');
 
-const printPassTimes = function(passTimes) {
+const printPassTimes = passTimes => {
   for (const pass of passTimes) {
     const datetime = new Date(0);
     datetime.setUTCSeconds(pass.risetime);
@@ -15,10 +15,12 @@ const printPassTimes = function(passTimes) {
   }
 };
 
-nextISSTimesForMyLocation((error, passTimes) => {
-  if (error) {
-    return console.log("It didn't work!", error);
-  }
+nextISSTimesForMyLocation()
+  .then(passTimes => {
+    printPassTimes(passTimes);
+  })
+  .catch((error) => {
+    console.log("It didn't work: ", error.message);
+  });
+  
 
-  printPassTimes(passTimes);
-});

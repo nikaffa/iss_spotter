@@ -2,7 +2,7 @@
 const request = require('request');
 const apikey = require('./apikey');
 
-// Requests to fetch IP address
+// Requests to fetch IP address from an API
 const fetchMyIP = callback => {
   request('https://api.ipify.org?format=json', (error, response, body) => {
     if (error) { //passes the error to the callback if an error occurs: invalid domain, user is offline, etc.
