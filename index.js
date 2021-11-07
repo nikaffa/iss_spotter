@@ -5,40 +5,21 @@
 Returns 5 upcoming times that the ISS will fly over, and the duration it will remain "visible" in the sky */
 
 //Main fetch function
+const { nextISSTimesForMyLocation } = require('./iss');
 
-//1.Fetch our IP Address
-/**
- * Makes a single API request to retrieve the user's IP address.
- * Input:
- *   - A callback (to pass back an error or the IP string)
- * Returns (via Callback):
- *   - An error, if any (nullable)
- *   - The IP address as a string (null if error). Example: "162.245.144.188"
- */
-const { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes } = require('./iss');
+const printPassTimes = function(passTimes) {
+  for (const pass of passTimes) {
+    const datetime = new Date(0);
+    datetime.setUTCSeconds(pass.risetime);
+    const duration = pass.duration;
+    console.log(`Next pass at ${datetime} for ${duration} seconds!`);
+  }
+};
 
-// fetchMyIP((error, ip) => {
-//   if (error) {
-//     console.log("It didn't work!" , error);
-//     return;
-//   }
-//   console.log('It worked! Returned IP:' , ip);
-// });
+nextISSTimesForMyLocation((error, passTimes) => {
+  if (error) {
+    return console.log("It didn't work!", error);
+  }
 
-// //2.Fetch the geo coordinates (Latitude & Longitude) for our IP
-// fetchCoordsByIP((error, geo) => {
-//   if (error) {
-//     console.log("It didn't work!" , error);
-//     return;
-//   }
-//   console.log('It worked! Returned geolocation:' , geo);
-// });
-
-// 3.Fetch the next ISS flyovers for our geo coordinates
-// fetchISSFlyOverTimes((error, coords) => {
-//   if (error) {
-//     console.log("It didn't work!" , error);
-//     return;
-//   }
-//   console.log('It worked! The next ISS flys: ' , coords);
-// });
+  printPassTimes(passTimes);
+});
